@@ -47,7 +47,7 @@ public class Dao {
 	 * 插入实体时,id若存在，则抛出异常，若不存在，数据表采取逐渐自增方式设值
 	 */
 	@SuppressWarnings({ "unchecked", "resource", "rawtypes" })
-	<T> void save(T entity) {
+	public <T> void save(T entity) {
 		Class clz = entity.getClass();
 		Field[] fields = clz.getDeclaredFields();
 		String sql = SqlUtils.getInsertSql(clz);
@@ -168,7 +168,7 @@ public class Dao {
 	 * @param args sql语句占位符参数
 	 * @return 查询的到的第一个实体对象
 	 */
-	<T> T selectOne(Class<T> clazz, String sql, Object... args) {
+	public <T> T selectOne(Class<T> clazz, String sql, Object... args) {
 		List<T> list = getList(clazz, sql, args);
 		if (list.size() > 0) {
 			return list.get(0);
@@ -183,7 +183,7 @@ public class Dao {
 	 * @param args sql语句占位符参数
 	 * @return
 	 */
-	<T> List<T> getList(Class<T> clazz, String sql, Object... args) {
+	public <T> List<T> getList(Class<T> clazz, String sql, Object... args) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -223,7 +223,7 @@ public class Dao {
 	 * @param args
 	 * @return
 	 */
-	List<Map<String, Object>> select(String sql,Object... args) {
+	public List<Map<String, Object>> select(String sql,Object... args) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -253,5 +253,51 @@ public class Dao {
 		} finally {
 			JDBCUtils.release(con, ps, rs);
 		}
+	}
+	
+	/**
+	 * 执行sql语句
+	 * @param sql
+	 * @param args
+	 */
+	public void excute(Connection con, String sql, Object... args) {
+		PreparedStatement ps = null;
+		try {
+			ps = con.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				ps.setObject(i + 1, args[i]);
+			}
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtils.release(null, ps);
+		}
+	}
+	
+	/**
+	 * 执行sql语句
+	 * @param sql
+	 * @param args
+	 */
+	public Object selectOne(Connection con, String sql, Object... args) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = con.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				ps.setObject(i + 1, args[i]);
+			}
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				return rs.getObject(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			JDBCUtils.release(null, ps, rs);
+		}
+		return null;
 	}
 }
