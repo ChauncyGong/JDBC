@@ -1,9 +1,11 @@
 package com.ifox.jdbc.studentQueryable;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import com.mysql.jdbc.Connection;
+import com.ifox.jdbc.basic.JDBCTools;
+import com.ifox.jdbc.entities.Student;
 
 public class StudentDaoImpl implements StudentDao {
 
@@ -27,7 +29,7 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			JDBCTools.release(statement, connection);
+			JDBCTools.release(connection, statement);
 		}
 		
 	}
@@ -65,7 +67,7 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			JDBCTools.release(rs, statement, connection);
+			JDBCTools.release(connection, statement, rs);
 		}
 		return null;
 	}

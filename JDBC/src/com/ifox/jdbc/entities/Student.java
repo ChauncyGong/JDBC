@@ -1,4 +1,4 @@
-package com.ifox.jdbc.studentQueryable;
+package com.ifox.jdbc.entities;
 
 public class Student {
 	
@@ -90,7 +90,7 @@ public class Student {
 	public String toString() {
 		return "Student [id=" + id + ", flowId=" + flowId + ", name=" + name
 				+ ", idCard=" + idCard + ", examNum=" + examNum + ", subject="
-				+ subject + ", grade=" + grade + "]";
+				+ subject + ", grade=" + grade + "]  \n";
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
+import com.ifox.jdbc.entities.Student;
+
 public class StudentService {
 	
 	Scanner scanner = new Scanner(System.in);
